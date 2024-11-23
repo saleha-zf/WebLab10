@@ -24,7 +24,7 @@ MySQL is used as database. Database design is made easy to understand.
 
 
 ## Tables
-- admininfo
+- user
 - teachers
 - students
 - attendance

@@ -23,18 +23,15 @@ if($_SESSION['name']!='oasis')
         $dp = date('Y-m-d');
         $course = $_POST['whichcourse'];
         
-        $stat = mysql_query("insert into attendance(stat_id,course,st_status,stat_date) values('$stat_id','$course','$st_status','$dp')");
+
+        $stat = mysqli_query($connection, "insert into attendance(stat_id,course,st_status,stat_date) values('$stat_id','$course','$st_status','$dp')");
         
         $att_msg = "Attendance Recorded.";
-
       }
-
-
-
     }
   }
-  catch(Execption $e){
-    $error_msg = $e->$getMessage();
+  catch(Exception $e){
+    $error_msg = $e->getMessage();  // Fixed typo $getMessage() to $e->getMessage()
   }
  ?>
 
@@ -56,12 +53,10 @@ if($_SESSION['name']!='oasis')
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-
 <style type="text/css">
   .status{
     font-size: 10px;
   }
-
 </style>
 
 </head>
@@ -77,7 +72,6 @@ if($_SESSION['name']!='oasis')
   <a href="attendance.php">Attendance</a>
   <a href="report.php">Report</a>
   <a href="../logout.php">Logout</a>
-
 </div>
 
 </header>
@@ -151,9 +145,9 @@ if($_SESSION['name']!='oasis')
      $i=0;
      $radio = 0;
      $batch = 2020;
-     $all_query = mysql_query("select * from students where st_batch='$batch' order by st_id asc");
+     $all_query = mysqli_query($connection, "select * from students where st_batch='$batch' order by st_id asc");
 
-     while ($data = mysql_fetch_array($all_query)) {
+     while ($data = mysqli_fetch_array($all_query)) {
        $i++;
      ?>
   <body>

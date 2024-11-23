@@ -43,7 +43,6 @@ if($_SESSION['name']!='oasis')
   <a href="report.php">Report</a>
   <a href="../logout.php">Logout</a>
 
-
 </div>
 
 </header>
@@ -80,9 +79,10 @@ if($_SESSION['name']!='oasis')
      $srbatch = $_POST['sr_batch'];
      $i=0;
      
-     $all_query = mysql_query("select * from students where students.st_batch = '$srbatch' order by st_id asc ");
+     // Replaced mysql_query() with mysqli_query() and mysqli connection
+     $all_query = mysqli_query($connection, "SELECT * FROM students WHERE students.st_batch = '$srbatch' ORDER BY st_id ASC");
      
-     while ($data = mysql_fetch_array($all_query)) {
+     while ($data = mysqli_fetch_array($all_query)) {
        $i++;
      
      ?>

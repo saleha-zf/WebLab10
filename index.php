@@ -1,76 +1,60 @@
 <?php
 
-if(isset($_POST['login']))
-{
-	//start of try block
+if (isset($_POST['login'])) {
+    try {
+        // Check empty fields
+        if (empty($_POST['username'])) {
+            throw new Exception("Username is required!");
+        }
+        if (empty($_POST['password'])) {
+            throw new Exception("Password is required!");
+        }
 
-	try{
+        // Establishing connection
+        include('connect.php'); // Uses MySQLi-based `connect.php`
 
-		//checking empty fields
-		if(empty($_POST['username'])){
-			throw new Exception("Username is required!");
-			
-		}
-		if(empty($_POST['password'])){
-			throw new Exception("Password is required!");
-			
-		}
-		//establishing connection with db and things
-		include ('connect.php');
-		
-		//checking login info into database
-		$row=0;
-		$result=mysql_query("select * from admininfo where username='$_POST[username]' and password='$_POST[password]' and type='$_POST[type]'");
+        // Prevent SQL injection with prepared statements
+        $stmt = $connection->prepare("SELECT * FROM user WHERE username = ? AND password = ? AND type = ?");
+        $stmt->bind_param("sss", $_POST['username'], $_POST['password'], $_POST['type']);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-		$row=mysql_num_rows($result);
+        // Check rows returned
+        if ($result->num_rows > 0) {
+            session_start();
+            $_SESSION['name'] = "oasis";
 
-		if($row>0 && $_POST["type"] == 'teacher'){
-			session_start();
-			$_SESSION['name']="oasis";
-			header('location: teacher/index.php');
-		}
-
-		else if($row>0 &&  $_POST["type"] == 'student'){
-			session_start();
-			$_SESSION['name']="oasis";
-			header('location: student/index.php');
-		}
-
-		else if($row>0 && $_POST["type"] == 'admin'){
-			session_start();
-			$_SESSION['name']="oasis";
-			header('location: admin/index.php');
-		}
-
-		else{
-			throw new Exception("Username,Password or Role is wrong, try again!");
-			
-			header('location: login.php');
-		}
-	}
-
-	//end of try block
-	catch(Exception $e){
-		$error_msg=$e->getMessage();
-	}
-	//end of try-catch
+            // Redirect based on role
+            if ($_POST["type"] == 'teacher') {
+                header('location: teacher/index.php');
+            } elseif ($_POST["type"] == 'student') {
+                header('location: student/index.php');
+            } elseif ($_POST["type"] == 'admin') {
+                header('location: admin/index.php');
+            }
+        } else {
+            throw new Exception("Username, Password, or Role is wrong, try again!");
+        }
+    } catch (Exception $e) {
+        $error_msg = $e->getMessage();
+    }
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html>
 <head>
 
 	<title>Online Attendance Management System</title>
-	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="main.css">
 	<!-- Latest compiled and minified CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
 	 
 	<!-- Optional theme -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
 	 
-	<link rel="stylesheet" href="styles.css" >
 	 
 	<!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

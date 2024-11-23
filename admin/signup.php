@@ -1,60 +1,36 @@
 <?php
-
 ob_start();
 session_start();
 
-if($_SESSION['name']!='oasis')
-{
-
-  header('location: ../index.php');
+if (!isset($_SESSION['name']) || $_SESSION['name'] != 'oasis') {
+    header('location: ../index.php');
+    exit();
 }
-?>
 
-
-<?php
-
-//establishing connection
 include('connect.php');
 
-  try{
+try {
+    if (isset($_POST['signup'])) {
+        if (empty($_POST['email'])) throw new Exception("Email can't be empty.");
+        if (!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) throw new Exception("Invalid email format.");
+        if (empty($_POST['uname'])) throw new Exception("Username can't be empty.");
+        if (empty($_POST['pass'])) throw new Exception("Password can't be empty.");
+        if (empty($_POST['fname'])) throw new Exception("Full name can't be empty.");
+        if (empty($_POST['phone'])) throw new Exception("Phone number can't be empty.");
+        if (!ctype_digit($_POST['phone'])) throw new Exception("Phone number should contain only digits.");
+        if (empty($_POST['type'])) throw new Exception("Role can't be empty.");
 
-    //validation of empty fields
-      if(isset($_POST['signup'])){
-
-        if(empty($_POST['email'])){
-          throw new Exception("Email cann't be empty.");
-        }
-
-          if(empty($_POST['uname'])){
-             throw new Exception("Username cann't be empty.");
-          }
-
-            if(empty($_POST['pass'])){
-               throw new Exception("Password cann't be empty.");
-            }
-              
-              if(empty($_POST['fname'])){
-                 throw new Exception("Username cann't be empty.");
-              }
-                if(empty($_POST['phone'])){
-                   throw new Exception("Username cann't be empty.");
-                }
-                  if(empty($_POST['type'])){
-                     throw new Exception("Username cann't be empty.");
-                  }
-
-        //insertion of data to database table admininfo
-        $result = mysql_query("insert into admininfo(username,password,email,fname,phone,type) values('$_POST[uname]','$_POST[pass]','$_POST[email]','$_POST[fname]','$_POST[phone]','$_POST[type]')");
-        $success_msg="Signup Successfully!";
-
-  
-  }
+        $hashed_password = password_hash($_POST['pass'], PASSWORD_BCRYPT);
+        $stmt = $connection->prepare("INSERT INTO user (username, password, email, fname, phone, type) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssss", $_POST['uname'], $hashed_password, $_POST['email'], $_POST['fname'], $_POST['phone'], $_POST['type']);
+        $stmt->execute();
+        $success_msg = "Signup Successfully!";
+    }
+} catch (Exception $e) {
+    $error_msg = $e->getMessage();
 }
-  catch(Exception $e){
-    $error_msg =$e->getMessage();
-  }
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -64,14 +40,13 @@ include('connect.php');
 <title>Online Attendance Management System 1.0</title>
 <meta charset="UTF-8">
 
-  <link rel="stylesheet" type="text/css" href="../css/main.css">
+  <link rel="stylesheet" type="text/css" href="main.css">
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
    
   <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
    
-  <link rel="stylesheet" href="styles.css" >
    
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

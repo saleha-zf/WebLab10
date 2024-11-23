@@ -1,51 +1,51 @@
-  <?php
+<?php
 
-  ob_start();
-  session_start();
+ob_start();
+session_start();
 
-  //checking if the session is valid
-  if($_SESSION['name']!='oasis')
-  {
-    header('location: ../login.php');
-  }
-  ?>
+//checking if the session is valid
+if($_SESSION['name']!='oasis')
+{
+  header('location: ../login.php');
+}
 
-  <?php include('connect.php');?>
+?>
+
+<?php include('connect.php');?>
 
 
 <?php 
 try{
 
-         //checking form data and empty fields
-          if(isset($_POST['done'])){
+  //checking form data and empty fields
+  if(isset($_POST['done'])){
 
-          if (empty($_POST['name'])) {
-            throw new Exception("Name cannot be empty");
-            
-          }
-              if (empty($_POST['dept'])) {
-               
-                throw new Exception("Department cannot be empty");
-                
-              }
-                  if(empty($_POST['batch']))
-                  {
-                    throw new Exception("Batch cannot be empty");
-                    
-                  }
-                      if(empty($_POST['email']))
-                      {
-                        throw new Exception("Email cannot be empty");
-                        
-                      }
+    if (empty($_POST['name'])) {
+      throw new Exception("Name cannot be empty");
 
-  //initializing the student id
-  $sid = $_POST['id'];
+    }
+    if (empty($_POST['dept'])) {
+      throw new Exception("Department cannot be empty");
 
-  //udating students information to database table "students"
-  $result = mysql_query("update students set st_name='$_POST[name]',st_dept='$_POST[dept]',st_batch='$_POST[batch]',st_sem='$_POST[semester]', st_email = '$_POST[email]' where st_id='$sid'");
-  $success_msg = 'Updated  successfully';
-  
+    }
+    if(empty($_POST['batch']))
+    {
+      throw new Exception("Batch cannot be empty");
+
+    }
+    if(empty($_POST['email']))
+    {
+      throw new Exception("Email cannot be empty");
+
+    }
+
+    //initializing the student id
+    $sid = $_POST['id'];
+
+    //udating students information to database table "students"
+    $result = mysqli_query($connection, "UPDATE students SET st_name='$_POST[name]', st_dept='$_POST[dept]', st_batch='$_POST[batch]', st_sem='$_POST[semester]', st_email='$_POST[email]' WHERE st_id='$sid'");
+    $success_msg = 'Updated successfully';
+
   }
 
 }
@@ -54,9 +54,7 @@ catch(Exception $e){
   $error_msg =$e->getMessage();
 }
 
-
 ?>
-
 
 
 <!DOCTYPE html>
@@ -66,16 +64,16 @@ catch(Exception $e){
 <head>
 <title>Online Attendance Management System 1.0</title>
 <meta charset="UTF-8">
-  
+
   <link rel="stylesheet" type="text/css" href="../css/main.css">
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
-   
+
   <!-- Optional theme -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" >
-   
+
   <link rel="stylesheet" href="styles.css" >
-   
+
   <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
@@ -112,7 +110,7 @@ catch(Exception $e){
           <h3>Update Account</h3>
           <br>
           
-          <!-- Error or Success Message printint started --><p>
+          <!-- Error or Success Message printing started --><p>
       <?php
 
           if(isset($success_msg))
@@ -125,7 +123,7 @@ catch(Exception $e){
           }
 
         ?>
-          </p><!-- Error or Success Message printint ended -->
+          </p><!-- Error or Success Message printing ended -->
 
           <br>
    
@@ -151,8 +149,8 @@ catch(Exception $e){
        $i=0;
 
        //searching students information respected to the particular ID
-       $all_query = mysql_query("select * from students where students.st_id='$sr_id'");
-       while ($data = mysql_fetch_array($all_query)) {
+       $all_query = mysqli_query($connection, "SELECT * FROM students WHERE students.st_id='$sr_id'");
+       while ($data = mysqli_fetch_array($all_query)) {
          $i++;
        
        ?>

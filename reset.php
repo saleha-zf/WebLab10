@@ -1,21 +1,14 @@
-
-
-
 <?php 
-  
   include('connect.php');
-
-
- ?>
-
+?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <title>Online Attendance Management System 1.0</title>
 <meta charset="UTF-8">
-  <link rel="stylesheet" type="text/css" href="css/main.css">
-  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="/main.css">
+  <link rel="stylesheet" type="text/css" href="/main.css">
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
    
@@ -67,21 +60,24 @@
 
           $test = $_POST['email'];
           $row = 0;
-          $query = mysql_query("select password from admininfo where email = '$test'");
-          $row = mysql_num_rows($query);
+
+          // Replaced mysql_query() with mysqli_query() and included $connection variable
+          $query = mysqli_query($connection, "select password from user where email = '$test'");
+          $row = mysqli_num_rows($query);
 
           if($row == 0){
 ?>
-      <div  class="content"><p>Email is not associated with any account. Contact OAMS 1.0</p></div>
+      <div class="content"><p>Email is not associated with any account. Contact OAMS 1.0</p></div>
 
 <?php
           }
 
           else{
 
-            $query = mysql_query("select password from admininfo where email = '$test'");
-            $i =0;
-            while($dat = mysql_fetch_array($query)){
+            // Replaced mysql_query() with mysqli_query() and included $connection variable
+            $query = mysqli_query($connection, "select password from user where email = '$test'");
+            $i = 0;
+            while($dat = mysqli_fetch_array($query)){
                 $i++;
 ?>
   <strong>
@@ -90,7 +86,6 @@
       }
           }
   }
-
 
        ?>
 

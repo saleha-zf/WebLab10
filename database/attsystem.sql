@@ -25,10 +25,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admininfo`
+-- Table structure for table `user`
 --
 
-CREATE TABLE `admininfo` (
+CREATE TABLE `user` (
   `username` varchar(20) NOT NULL,
   `password` varchar(20) NOT NULL,
   `email` varchar(30) NOT NULL,
@@ -38,10 +38,10 @@ CREATE TABLE `admininfo` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `admininfo`
+-- Dumping data for table `user`
 --
 
-INSERT INTO `admininfo` (`username`, `password`, `email`, `fname`, `phone`, `type`) VALUES
+INSERT INTO `user` (`username`, `password`, `email`, `fname`, `phone`, `type`) VALUES
 ('admin', 'admin', 'admin@gmail.com', 'admin', '2147483647', 'admin'),
 ('pravesh', 'pravesh', 'rawatpravesh0016@gmail.com', 'Pravesh Rawat', '0992642003', 'student'),
 ('sumit', 'sumit', 'sumitbangar59@gmail.com', 'sumit bangar', '988766363', 'teacher');
@@ -134,9 +134,9 @@ INSERT INTO `teachers` (`tc_id`, `tc_name`, `tc_dept`, `tc_email`, `tc_course`) 
 --
 
 --
--- Indexes for table `admininfo`
+-- Indexes for table `user`
 --
-ALTER TABLE `admininfo`
+ALTER TABLE `user`
   ADD PRIMARY KEY (`username`);
 
 --

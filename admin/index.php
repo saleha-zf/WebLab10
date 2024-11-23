@@ -1,45 +1,54 @@
 <?php
-
 ob_start();
 session_start();
 
-if($_SESSION['name']!='oasis')
-{
-
-  header('location: ../index.php');
+if ($_SESSION['name'] != 'oasis') {
+    header('location: ../index.php');
 }
 ?>
 
 <?php
+include('connect.php'); // Ensure this uses mysqli
 
-include('connect.php');
+// Data insertion
+try {
+    // Checking if the data comes from the students form
+    if (isset($_POST['std'])) {
+        // Students data insertion to the database table "students"
+        $result = mysqli_query(
+            $connection, // Pass the connection
+            "INSERT INTO students(st_id, st_name, st_dept, st_batch, st_sem, st_email) 
+             VALUES ('{$_POST['st_id']}', '{$_POST['st_name']}', '{$_POST['st_dept']}', 
+             '{$_POST['st_batch']}', '{$_POST['st_sem']}', '{$_POST['st_email']}')"
+        );
 
-//data insertion
-  try{
-
-    //checking if the data comes from students form
-    if(isset($_POST['std'])){
-
-      //students data insertion to database table "students"
-        $result = mysql_query("insert into students(st_id,st_name,st_dept,st_batch,st_sem,st_email) values('$_POST[st_id]','$_POST[st_name]','$_POST[st_dept]','$_POST[st_batch]','$_POST[st_sem]','$_POST[st_email]')");
-        $success_msg = "Student added successfully.";
-
+        if ($result) {
+            $success_msg = "Student added successfully.";
+        } else {
+            throw new Exception("Error adding student: " . mysqli_error($connection));
+        }
     }
 
-        //checking if the data comes from teachers form
-        if(isset($_POST['tcr'])){
+    // Checking if the data comes from the teachers form
+    if (isset($_POST['tcr'])) {
+        // Teachers data insertion to the database table "teachers"
+        $res = mysqli_query(
+            $connection, // Pass the connection
+            "INSERT INTO teachers(tc_id, tc_name, tc_dept, tc_email, tc_course) 
+             VALUES ('{$_POST['tc_id']}', '{$_POST['tc_name']}', '{$_POST['tc_dept']}', 
+             '{$_POST['tc_email']}', '{$_POST['tc_course']}')"
+        );
 
-          //teachers data insertion to the database table "teachers"
-          $res = mysql_query("insert into teachers(tc_id,tc_name,tc_dept,tc_email,tc_course) values('$_POST[tc_id]','$_POST[tc_name]','$_POST[tc_dept]','$_POST[tc_email]','$_POST[tc_course]')");
-          $success_msg = "Teacher added successfully.";
+        if ($res) {
+            $success_msg = "Teacher added successfully.";
+        } else {
+            throw new Exception("Error adding teacher: " . mysqli_error($connection));
+        }
     }
-
-  }
-  catch(Execption $e){
-    $error_msg =$e->getMessage();
-  }
-
- ?>
+} catch (Exception $e) {
+    $error_msg = $e->getMessage();
+}
+?>
 
 
 

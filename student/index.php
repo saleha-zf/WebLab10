@@ -16,7 +16,7 @@ if($_SESSION['name']!='oasis')
 <head>
 <title>Online Attendance Management System 1.0</title>
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="../css/main.css">
+<link rel="stylesheet" href="main.css">
 
 </head>
 <!-- head ended -->
